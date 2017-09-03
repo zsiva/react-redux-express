@@ -5,7 +5,7 @@ import { fetchContent } from '../../actions/questions';
 
 class App extends Component {
   componentDidMount(){
-    this.props.fetchContent('./data/dummy.json');
+    this.props.fetchContent('/api/getQuestions');
   }
 
   render() {
