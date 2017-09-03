@@ -1,17 +1,26 @@
-import axios from "axios";
+import fetch from 'isomorphic-fetch'
 
 const GET_CONTENT = 'GET_CONTENT';
+const ITEMS_LOADING = 'ITEMS_LOADING';
 
 const getContent = (content) => ({type: GET_CONTENT, content});
+const itemsIsLoading = (bool) => ({ type: ITEMS_LOADING, isLoading: bool});
 
-const fetchContent = () => dispatch => {
+const fetchContent = (url) => dispatch => {
+  fetch(url, {
+      headers : {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+       }
 
-  axios.get(`/api/getQuestions`)
-    .then((response) => {
-      return response.data;
     })
-    .then((questions) => {
-      dispatch(getContent(questions));
+    .then((response) => {
+      dispatch(itemsIsLoading(true));
+      return response.json();
+    })
+    .then((content) => {
+      dispatch(getContent(content));
+      dispatch(itemsIsLoading(false));
     })
     .catch((err) => {
       console.log('ERROR', err);
@@ -21,5 +30,6 @@ const fetchContent = () => dispatch => {
 
 export {
   fetchContent,
-  GET_CONTENT
+  GET_CONTENT,
+  ITEMS_LOADING
 }
