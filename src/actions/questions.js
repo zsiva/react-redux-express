@@ -1,35 +1,25 @@
-import fetch from 'isomorphic-fetch'
+import {fetchJson} from '../utils/fetch';
 
 const GET_CONTENT = 'GET_CONTENT';
 const ITEMS_LOADING = 'ITEMS_LOADING';
+const HAS_ERRORS = 'HAS_ERRORS';
 
 const getContent = (content) => ({type: GET_CONTENT, content});
-const itemsIsLoading = (bool) => ({ type: ITEMS_LOADING, isLoading: bool});
+const itemsAreLoading = (bool) => ({ type: ITEMS_LOADING, isLoading: bool});
+const hasErrors = (bool) => ({ type: HAS_ERRORS, errors: bool})
 
 const fetchContent = (url) => dispatch => {
-  fetch(url, {
-      headers : {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-       }
+  dispatch(itemsAreLoading(true));
 
-    })
-    .then((response) => {
-      dispatch(itemsIsLoading(true));
-      return response.json();
-    })
-    .then((content) => {
-      dispatch(getContent(content));
-      dispatch(itemsIsLoading(false));
-    })
-    .catch((err) => {
-      console.log('ERROR', err);
-      console.error.bind(err);
-    })
+  fetchJson(url)
+    .then((response) => response.json())
+    .then((content) => dispatch(getContent(content)))
+    .catch(err => dispatch(hasErrors(true)));
 };
 
 export {
   fetchContent,
   GET_CONTENT,
-  ITEMS_LOADING
+  ITEMS_LOADING,
+  HAS_ERRORS
 }

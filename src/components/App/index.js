@@ -9,17 +9,19 @@ class App extends Component {
   }
 
   render() {
-    const { items = []} = this.props;
+    const { items = [], errors = false} = this.props;
+
     return (
       <div className="App">
         <div className="App-header">
           <h2>List of questions</h2>
         </div>
-        <p className="App-intro">
+        <div className="App-intro">
+          {errors && <p>Data not found</p>}
           <ul>
-            {items.map((i,k) => <li key={k}>{i.eid} : {i.title}</li>)}
+            {!errors && items.map((i,k) => <li key={k}>{i.eid} : {i.title}</li>)}
           </ul>
-        </p>
+        </div>
       </div>
     );
   }
@@ -28,7 +30,8 @@ class App extends Component {
 const mapStateToProps = (state) => {
     return {
       items: state.questions.content && state.questions.content.items,
-      isLoading: state.questions.isLoading
+      isLoading: state.questions.isLoading,
+      errors: state.questions.hasErrors
     };
 };
 
