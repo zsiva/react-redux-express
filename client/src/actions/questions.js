@@ -11,8 +11,8 @@ const hasErrors = (bool) => ({ type: HAS_ERRORS, errors: bool})
 const fetchContent = (url) => dispatch => {
   dispatch(itemsAreLoading(true));
 
-  fetchJson(url)
-    .then((response) => response.json())
+  return fetchJson(url)
+    .then((response) => {dispatch(itemsAreLoading(false)); return response.json()})
     .then((content) => dispatch(getContent(content)))
     .catch(err => dispatch(hasErrors(true)));
 };

@@ -3,7 +3,7 @@ import './style.css';
 import { connect } from 'react-redux';
 import { fetchContent } from '../../actions/questions';
 
-class App extends Component {
+export class App extends Component {
   componentDidMount(){
     this.props.fetchContent('/api/getQuestions');
   }
